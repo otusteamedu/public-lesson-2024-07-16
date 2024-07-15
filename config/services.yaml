@@ -26,3 +26,7 @@ services:
     App\Doctrine\MigrationEventListener:
         tags:
             - { name: doctrine.event_listener, event: postGenerateSchema, connection: default }
+
+    App\Controller\Api\v1\FindGoods\Manager:
+        arguments:
+            $finder: '@fos_elastica.finder.good'
