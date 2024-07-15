@@ -17,6 +17,6 @@ class Manager
      */
     public function findGoods(FindGoodsRequest $request): array
     {
-        return $this->finder->find($request->search);
+        return $this->finder->find($request->search.'~2');
     }
 }
