@@ -11,6 +11,7 @@ class FindGoodsRequest
     public function __construct(
         #[Assert\NotBlank]
         public readonly string $search,
+        public readonly bool $activeOnly,
     ) {
     }
 }
