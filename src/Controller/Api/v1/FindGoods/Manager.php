@@ -3,20 +3,27 @@
 namespace App\Controller\Api\v1\FindGoods;
 
 use App\Controller\Api\v1\FindGoods\Input\FindGoodsRequest;
-use App\Entity\Good;
-use FOS\ElasticaBundle\Finder\FinderInterface;
+use App\Controller\Api\v1\FindGoods\Output\GoodResult;
+use FOS\ElasticaBundle\Finder\HybridFinderInterface;
+use FOS\ElasticaBundle\HybridResult;
 
 class Manager
 {
-    public function __construct(private readonly FinderInterface $finder)
+    public function __construct(private readonly HybridFinderInterface $finder)
     {
     }
 
     /**
-     * @return Good[]
+     * @return GoodResult[]
      */
     public function findGoods(FindGoodsRequest $request): array
     {
-        return $this->finder->find($request->search.'~2');
+        return array_map(
+            static fn (HybridResult $result): GoodResult => new GoodResult(
+                $result->getTransformed(),
+                $result->getResult()->getScore(),
+            ),
+            $this->finder->findHybrid($request->search.'~2')
+        );
     }
 }
